@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudentMart</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        .container {
+            display: flex;
+            width: 100%;
+        }
+
+        .sidebar {
+            width: 200px;
+            background-color: #f8f8f8;
+            padding: 20px;
+        }
+
+        .sidebar h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .sidebar ul li {
+            margin: 10px 0;
+        }
+
+        .sidebar ul li a {
+            text-decoration: none;
+            color: #333;
+            display: block;
+            padding: 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .sidebar ul li a:hover,
+        .sidebar ul li a.active {
+            background-color: #ddd;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 20px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        header input[type="text"] {
+            width: 60%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        header nav a {
+            margin: 0 10px;
+            text-decoration: none;
+            color: #333;
+        }
+
+        header nav a img {
+            width: 24px;
+            height: 24px;
+        }
+
+        .form-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-request-form {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .product-request-form h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .product-request-form label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+
+        .product-request-form .name-inputs {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .product-request-form input[type="text"],
+        .product-request-form input[type="email"],
+        .product-request-form textarea {
+            width: calc(100% - 20px);
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+            margin-top: 10px;
+        }
+
+        .product-request-form .product-type {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .product-request-form .product-type input[type="radio"] {
+            margin: 0 5px 0 0;
+        }
+
+        .product-request-form .product-type label {
+            margin: 0;
+        }
+
+        .product-request-form button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #f90;
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .product-request-form button:hover {
+            background-color: #e80;
+        }
+
+        #product-type-style {
+            display: flex;
+            flex-direction: row;
+            justify-content:flex-start;
+            gap: 70px;
+            
+        }
+        .product-type {
+            display: flex;
+            flex-direction: column;
+            padding-top:    10px;
+        }
+        .item{
+            align-self: flex-start;
+        }
+        
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h1>StudentMart</h1>
+            <ul>
+                <li><a href="#">Orders</a></li>
+                <li><a href="#">WishList</a></li>
+                <li><a href="#">Profile</a></li>
+                <li><a href="#" class="active">Make a Request</a></li>
+                <li><a href="#">Log Out</a></li>
+            </ul>
+        </div>
+        <div class="main-content">
+            <header>
+                <input type="text" placeholder="Looking for something specific? Start typing!">
+                <nav>
+                    <a href="#">Buy</a>
+                    <a href="#">Sell</a>
+                    <a href="#">Donate</a>
+                    <a href="#"><img src="cart-icon.png" alt="Cart"></a>
+                    <a href="#"><img src="profile-icon.png" alt="User"></a>
+                    <a href="#"><img src="notifications-icon.png" alt="Notifications"></a>
+                </nav>
+            </header>
+            <div class="form-container">
+                <form class="product-request-form" action="/submit_request" method="POST">
+                    <h2>Product Request Form</h2>
+                    <label for="first-name">Your Name</label>
+                    <div class="name-inputs">
+                        <input type="text" id="first-name" placeholder="First Name">
+                        <input type="text" id="last-name" placeholder="Last Name">
+                    </div>
+                    <label for="email">Your Email</label>
+                    <input type="email" id="email" placeholder="example@example.com">
+                    <div id="product-type-style">
+                        <label for="product-type">Product Type</label>
+                        <div class="product-type">
+                            <div class="item">
+                                <input type="radio" id="book" name="product-type" value="book">Book
+                            </div>
+                            <div class="item">
+                                <input type="radio" id="calculator" name="product-type" value="calculator">Calculator
+                            </div>
+                            <div class="item">
+                                <input type="radio" id="lab-essentials" name="product-type" value="lab-essentials">Lab Essentials
+                            </div>
+                        </div>
+                    </div>
+                    <label for="product-name">Product Name</label>
+                    <input type="text" id="product-name">
+                    <label for="description">Description</label>
+                    <textarea id="description"></textarea>
+                    <button type="submit">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
