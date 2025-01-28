@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <h1>Donation Form: </h1>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Book Donation Form</title>
@@ -12,12 +11,13 @@
         }
 
         form {
-            max-width: 900px;
+            max-width: 1000px;
             margin: 0 auto;
             border: 1px solid #ccc;
             padding: 20px;
             border-radius: 10px;
             background-color: #f9f9f9;
+            transition: background-color 1s ease;
         }
 
         .form-row {
@@ -31,6 +31,7 @@
             flex: 1;
             display: flex;
             flex-direction: column;
+            padding:20px;
         }
 
         .form-group-full {
@@ -44,21 +45,11 @@
             font-weight: bold;
         }
 
-        input[type="text"], select {
+        input[type="text"], input[type="number"], input[type="email"], select {
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
             width: 100%;
-        }
-
-        .checkbox-group-inline {
-            display: flex;
-            align-items: center;
-            margin-top: 5px;
-        }
-
-        .checkbox-group-inline input[type="checkbox"] {
-            margin-right: 5px;
         }
 
         .checkbox-group {
@@ -98,36 +89,73 @@
             align-content: center;
             margin-top: 10px;
         }
-
-        /* Hide the number input spinner */
-        input[type="number"]::-webkit-outer-spin-button,
-        input[type="number"]::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-
-        input[type="number"] {
-            -moz-appearance: textfield;
-        }
     </style>
     <script>
-        function validateNumberInput(event, maxLength) {
+         function validateNumberInput(event, maxLength) {
             const input = event.target;
             if (input.value.length > maxLength) {
                 input.value = input.value.slice(0, maxLength);
             }
         }
-
-        function validatePositiveNumber(event) {
-            const input = event.target;
-            if (input.value < 0) {
-                input.value = '';
-            }
+    function validateMobile(event,maxLength) {
+        const mobile = document.getElementById("mobile");
+        const mobileError = document.getElementById("mobileError");
+        if (mobile.value.length >maxLength) {
+            mobileError.textContent = "Mobile number must be exactly 10 digits.";
+            return false;
+        } else {
+            mobile.value=mobile.value.slice(0,maxLength);
+            mobileError.textContent = "";
+            return true;
         }
+    }
+    function validatePincode(event,maxLength) {
+        const pincode = document.getElementById("pincode");
+        const pincodeError = document.getElementById("pincodeError");
+        if (pincode.value.length > maxLength) {
+            pincodeError.textContent = "Pincode must be exactly 6 digits.";
+            return false;
+        } else {
+            pincode.value=pincode.value.slice(0,maxLength);
+            pincodeError.textContent = "";
+            return true;
+        }
+    }
+    function validateDiscount() {
+        const discount = document.getElementById("discount");
+        const discountError = document.getElementById("discountError");
+        if (discount.value < 0 || discount.value > 100) {
+            discountError.textContent = "Discount must be between 0 and 100.";
+            return false;
+        } else {
+            discountError.textContent = "";
+            return true;
+        }
+    }
+    function validateForm(event) {
+        const isDiscountValid = validateDiscount();
+        const isMobileValid = validateMobile();
+        const isPincodeValid = validatePincode();
+        if (!isMobileValid || !isPincodeValid || !isDiscountValid) {
+            event.preventDefault(); // Prevent form submission
+        }
+    }
+        function changeBackgroundColor() {
+            const form = document.querySelector('form');
+            const colors = ['#f9f9f9', '#e0f7fa', '#ffe0b2', '#fce4ec', '#e8f5e9'];
+            let index = 0;
+
+            setInterval(() => {
+                form.style.backgroundColor = colors[index];
+                index = (index + 1) % colors.length;
+            }, 2000); // Change color every 2 seconds
+        }
+        window.onload = changeBackgroundColor;
     </script>
 </head>
 <body>
-    <form action="/submit" method="POST">
+    <h1>Book Donation Form : </h1>
+    <form action="/submit" method="POST" >
         <div class="form-row">
             <div class="form-group">
                 <label for="firstName">First Name *</label>
@@ -140,21 +168,29 @@
         </div>
         <div class="form-row">
             <div class="form-group">
-                <label for="pincode">Pickup pincode *</label>
-                <input type="number" id="pincode" name="pincode" required oninput="validateNumberInput(event, 6)">
+                <label for="email">Email Address *</label>
+                <input type="email" id="email" name="email" required>
             </div>
-            <div class="form-group">
-                <label for="whatsappNumber">10-digit Whatsapp number *</label>
-                <input type="number" id="whatsappNumber" name="whatsappNumber" oninput="validateNumberInput(event, 10)">
-                <div class="checkbox-group-inline">
-                    <input type="checkbox" id="useAsMobileNumber" name="useAsMobileNumber">
-                    <label for="useAsMobileNumber">Use as mobile number</label>
+            <form action="/submit" method="POST" onsubmit="validateForm(event)">
+                <div class="form-group">
+                    <label for="mobile">Mobile Number *</label>
+                    <input type="number" id="mobile" name="mobile" oninput="validateMobile(event, 10)" required maxlength="10">
+                    <span id="mobileError" style="color: red; font-size: 12px;"></span>
                 </div>
-            </div>
+                <div class="form-group">
+                    <label for="pincode">Pincode *</label>
+                    <input type="number" id="pincode" name="pincode" maxlength="6" oninput="validatePincode(event, 6)" required>
+                    <span id="pincodeError" style="color: red; font-size: 12px;"></span>
+                </div>
+                <div class="form-group">
+                    <label for="discount">Discount (if any)</label>
+                    <input type="number" id="discount" name="discount" min="0" max="100" maxlength="2" oninput="validateDiscount(event,2)" required>
+                    <span id="discountError" style="color: red; font-size: 12px;"></span> 
+                </div>
         </div>
         <div class="form-row">
             <div class="form-group">
-                <label for="address">Pickup address (Area & street) *</label>
+                <label for="address">Pickup Address (Area & Street) *</label>
                 <input type="text" id="address" name="address" required>
             </div>
         </div>
@@ -162,42 +198,6 @@
             <div class="form-group">
                 <label for="landmark">Landmark *</label>
                 <input type="text" id="landmark" name="landmark" required>
-            </div>
-        </div>
-        <div class="form-row">
-            <div class="form-group">
-                <label for="state">Select State *</label>
-                <select id="state" name="state" required>
-                    <option value="">- Select State -</option>
-                    <option value="">Andhra Pradesh</option>
-                    <option value="">Arunachal Pradesh</option>
-                    <option value="">Assam</option>
-                    <option value="">Bihar</option>
-                    <option value="">Chhattisgarh</option>
-                    <option value="">Goa</option>
-                    <option value="">Gujarat</option>
-                    <option value="">Haryana</option>
-                    <option value="">Himachal Pradesh</option>
-                    <option value="">Jharkhand</option>
-                    <option value="">Karnataka</option>
-                    <option value="">Kerala</option>
-                    <option value="">Madhya Pradesh</option>
-                    <option value="">Maharashtra</option>
-                    <option value="">Manipur</option>
-                    <option value="">Meghalaya</option>
-                    <option value="">Mizoram</option>
-                    <option value="">Nagaland</option>
-                    <option value="">Odisha</option>
-                    <option value="">Punjab</option>
-                    <option value="">Rajasthan</option>
-                    <option value="">Sikkim</option>
-                    <option value="">Tamil Nadu</option>
-                    <option value="">Telangana</option>
-                    <option value="">Tripura</option>
-                    <option value="">Uttarakhand</option>
-                    <option value="">Uttar Pradesh</option>
-                    <option value="">West Bengal</option>
-                </select>
             </div>
             <div class="form-group">
                 <label for="city">City/District/Town *</label>
@@ -210,21 +210,17 @@
                 <input type="number" id="approxBooks" name="approxBooks" required min="0">
             </div>
             <div class="form-group">
-                <label for="cartonBoxes">No. of cartons/Boxes</label>
+                <label for="cartonBoxes">No. of Cartons/Boxes</label>
                 <input type="number" id="cartonBoxes" name="cartonBoxes" min="0">
-            </div>
-            <div class="form-group">
-                <label for="totalWeight">Approx. Total Weight (in kgs) *</label>
-                <input type="number" id="totalWeight" name="totalWeight" required min="0">
             </div>
         </div>
         <div class="form-row">
             <div class="form-group-full">
-                <label>Select most suitable books categories</label>
+                <label>Select Most Suitable Book Categories</label>
                 <div class="checkbox-group">
                     <div class="checkbox-item">
                         <input type="checkbox" id="neet" name="category" value="neet">
-                        <label for="neet">Neet</label>
+                        <label for="neet">NEET</label>
                     </div>
                     <div class="checkbox-item">
                         <input type="checkbox" id="school" name="category" value="school">
@@ -244,7 +240,7 @@
                     </div>
                     <div class="checkbox-item">
                         <input type="checkbox" id="spiritualBooks" name="category" value="spiritualBooks">
-                        <label for="spiritualBooks">Spiritual books</label>
+                        <label for="spiritualBooks">Spiritual Books</label>
                     </div>
                     <div class="checkbox-item">
                         <input type="checkbox" id="novels" name="category" value="novels">
